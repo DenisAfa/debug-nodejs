@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+require('dotenv').config();
 
 const sequelize = new Sequelize(
   process.env.DB,
@@ -7,6 +8,7 @@ const sequelize = new Sequelize(
   {
     host: 'localhost',
     dialect: 'postgres',
+    port: '5433',
   }
 );
 
@@ -19,3 +21,5 @@ sequelize.authenticate().then(
     console.log(`Error: ${err}`);
   }
 );
+
+module.exports = sequelize;
