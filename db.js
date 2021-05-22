@@ -12,14 +12,17 @@ const sequelize = new Sequelize(
   }
 );
 
+const User = require('./models/user')(sequelize, Sequelize);
+const Game = require('./models/game')(sequelize, Sequelize);
+
 sequelize.authenticate().then(
-  function success() {
+  () => {
     console.log('Connected to DB');
   },
 
-  function fail(err) {
+  (err) => {
     console.log(`Error: ${err}`);
   }
 );
 
-module.exports = sequelize;
+module.exports = { sequelize, User, Game };

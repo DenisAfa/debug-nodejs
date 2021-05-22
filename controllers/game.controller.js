@@ -1,16 +1,17 @@
-var router = require('express').Router();
-var Game = require('../db');
+const router = require('express').Router();
+const { sequelize } = require('../db');
+const { Game } = require('../db');
 
 router.get('/all', (req, res) => {
-  Game.findAll({ where: { owner_id: req.user.id } }).then(
-    function findSuccess(data) {
+  Game.findAll({ where: { ownerId: req.user.id } }).then(
+    (data) => {
       res.status(200).json({
         games: games,
         message: 'Data fetched.',
       });
     },
 
-    function findFail() {
+    () => {
       res.status(500).json({
         message: 'Data not found',
       });
@@ -19,14 +20,14 @@ router.get('/all', (req, res) => {
 });
 
 router.get('/:id', (req, res) => {
-  Game.findOne({ where: { id: req.params.id, owner_id: req.user.id } }).then(
-    function findSuccess(game) {
+  Game.findOne({ where: { id: req.params.id, ownerId: req.user.id } }).then(
+    (game) => {
       res.status(200).json({
         game: game,
       });
     },
 
-    function findFail(err) {
+    (err) => {
       res.status(500).json({
         message: 'Data not found.',
       });
@@ -37,20 +38,20 @@ router.get('/:id', (req, res) => {
 router.post('/create', (req, res) => {
   Game.create({
     title: req.body.game.title,
-    owner_id: req.body.user.id,
+    ownerId: req.body.user.id,
     studio: req.body.game.studio,
-    esrb_rating: req.body.game.esrb_rating,
-    user_rating: req.body.game.user_rating,
-    have_played: req.body.game.have_played,
+    esrbRating: req.body.game.esrbRating,
+    userRating: req.body.game.userRating,
+    havePlayed: req.body.game.havePlayed,
   }).then(
-    function createSuccess(game) {
+    (game) => {
       res.status(200).json({
         game: game,
         message: 'Game created.',
       });
     },
 
-    function createFail(err) {
+    (err) => {
       res.status(500).send(err.message);
     }
   );
@@ -61,25 +62,25 @@ router.put('/update/:id', (req, res) => {
     {
       title: req.body.game.title,
       studio: req.body.game.studio,
-      esrb_rating: req.body.game.esrb_rating,
-      user_rating: req.body.game.user_rating,
-      have_played: req.body.game.have_played,
+      esrbRating: req.body.game.esrbRating,
+      userRating: req.body.game.userRating,
+      havePlayed: req.body.game.havePlayed,
     },
     {
       where: {
         id: req.params.id,
-        owner_id: req.user,
+        ownerId: req.user,
       },
     }
   ).then(
-    function updateSuccess(game) {
+    (game) => {
       res.status(200).json({
         game: game,
         message: 'Successfully updated.',
       });
     },
 
-    function updateFail(err) {
+    (err) => {
       res.status(500).json({
         message: err.message,
       });
@@ -91,17 +92,17 @@ router.delete('/remove/:id', (req, res) => {
   Game.destroy({
     where: {
       id: req.params.id,
-      owner_id: req.user.id,
+      ownerId: req.user.id,
     },
   }).then(
-    function deleteSuccess(game) {
+    (game) => {
       res.status(200).json({
         game: game,
         message: 'Successfully deleted',
       });
     },
 
-    function deleteFail(err) {
+    (err) => {
       res.status(500).json({
         error: err.message,
       });
