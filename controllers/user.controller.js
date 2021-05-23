@@ -2,7 +2,6 @@ const router = require('express').Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const { sequelize } = require('../db');
 const { User } = require('../db');
 
 router.post('/signup', (req, res) => {
@@ -23,7 +22,7 @@ router.post('/signup', (req, res) => {
     },
 
     (err) => {
-      res.status(500).send(err.message);
+      res.status(500).json({ message: err.message });
     }
   );
 });

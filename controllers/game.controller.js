@@ -1,12 +1,11 @@
 const router = require('express').Router();
-const { sequelize } = require('../db');
 const { Game } = require('../db');
 
 router.get('/all', (req, res) => {
   Game.findAll({ where: { ownerId: req.user.id } }).then(
     (data) => {
       res.status(200).json({
-        games: games,
+        games: data,
         message: 'Data fetched.',
       });
     },
@@ -38,7 +37,7 @@ router.get('/:id', (req, res) => {
 router.post('/create', (req, res) => {
   Game.create({
     title: req.body.game.title,
-    ownerId: req.body.user.id,
+    ownerId: req.user.id,
     studio: req.body.game.studio,
     esrbRating: req.body.game.esrbRating,
     userRating: req.body.game.userRating,
@@ -69,7 +68,7 @@ router.put('/update/:id', (req, res) => {
     {
       where: {
         id: req.params.id,
-        ownerId: req.user,
+        ownerId: req.user.id,
       },
     }
   ).then(

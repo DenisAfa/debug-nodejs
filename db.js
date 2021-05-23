@@ -12,11 +12,11 @@ const sequelize = new Sequelize(
   }
 );
 
-const User = require('./models/user')(sequelize, Sequelize);
 const Game = require('./models/game')(sequelize, Sequelize);
+const User = require('./models/user')(sequelize, Sequelize);
 
 sequelize.authenticate().then(
-  () => {
+  (data) => {
     console.log('Connected to DB');
   },
 
